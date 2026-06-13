@@ -14,7 +14,7 @@ const Recruiterpage = () => {
     }
     return (
         <div>
-            <h3 className="text-xl text-center py-5">Welcome Back, {user.name}</h3>
+            <h3 className="text-xl text-center py-5">Welcome Back, {user?.name}</h3>
 
             <DashBoardStatsCards></DashBoardStatsCards>
 

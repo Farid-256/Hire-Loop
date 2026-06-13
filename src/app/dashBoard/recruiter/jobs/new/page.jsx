@@ -12,7 +12,11 @@ const NewJob = () => {
         setLoading(true);
         const formData = new FormData(e.currentTarget);
         const jobData = Object.fromEntries(formData.entries());
-        console.log("Job Data:", jobData);
+        
+        jobData.status = 'active'
+        jobData.companyId = 'company_123'
+
+
         setTimeout(() => {
             setLoading(false);
             e.target.reset();
