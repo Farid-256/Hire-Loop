@@ -35,9 +35,9 @@ const Navbar = () => {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-10 text-gray-700 font-medium">
-                    <Link href="#" className="hover:text-amber-500 transition">Browse Jobs</Link>
-                    <Link href="#" className="hover:text-amber-500 transition">Company</Link>
-                    <Link href="#" className="hover:text-amber-500 transition">Pricing</Link>
+                    <Link href="/jobs" className="hover:text-amber-500 transition">Browse Jobs</Link>
+                    <Link href="/companies" className="hover:text-amber-500 transition">Company</Link>
+                    <Link href="/plans" className="hover:text-amber-500 transition">Pricing</Link>
                 </div>
 
                 {/* Desktop Buttons */}

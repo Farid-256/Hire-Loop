@@ -1,10 +1,12 @@
+import { getLoggedInRecruiterCompany } from '@/lib/api/company';
 import { getCompanyJobs } from '@/lib/api/jobs';
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 const RecruiterJobs = async () => {
-    const companyId = 'company_123'
-    const jobs = await getCompanyJobs(companyId)
+    const company = await getLoggedInRecruiterCompany()
+    console.log(company)
+    const jobs = await getCompanyJobs(company._id)
 
     return (
         <div className="bg-gray-900 rounded-3xl border border-gray-800 overflow-hidden">

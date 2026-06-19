@@ -1,13 +1,16 @@
 'use client'
 import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 const Registation = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const router = useRouter()
+
+    const searchParams = useSearchParams()
+    const redirectTo = searchParams.get('redirect') || '/'
 
     const onSubmit = async (data) => {
         const { error } = await authClient.signUp.email({
@@ -21,7 +24,7 @@ const Registation = () => {
             toast.error(error.message);
         } else {
             toast.success("Account created!");
-            router.push('/auth/login');
+            router.push(redirectTo);
         }
     };
 
@@ -101,7 +104,7 @@ const Registation = () => {
 
                 <p className="text-center text-gray-500 text-sm mt-6">
                     Already have an account?{' '}
-                    <Link href="/auth/login" className="text-cyan-400 hover:underline font-medium">
+                    <Link href={`/auth/login?redirect=${redirectTo}`} className="text-cyan-400 hover:underline font-medium">
                         Login
                     </Link>
                 </p>
