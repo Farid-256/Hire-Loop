@@ -1,16 +1,32 @@
 
 
-import { Bars, Bell,  House, Magnifier, Person } from "@gravity-ui/icons";
+import { getUserSesson } from "@/lib/core/sesson";
+import { Bars, Bell, House, Magnifier, Person } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 import Link from "next/link";
 
-export function DashBoardSideBar() {
-    const navItems = [
+export async function DashBoardSideBar() {
+    const user = await getUserSesson()
+    const recruiterNavLinks = [
         { icon: House, href: '/dashBoard/recruiter', label: "Home" },
         { icon: Magnifier, href: '/dashBoard/recruiter/jobs', label: 'Jobs' },
         { icon: Bell, href: '/dashBoard/recruiter/jobs/new', label: "Creat Job" },
         { icon: Person, href: '/dashBoard/recruiter/company', label: "Company" },
-     ];
+    ];
+
+    const seekerNavLinks = [
+        { icon: House, label: 'Dashboard', href: '/dashboard/seeker' },
+        { icon: Magnifier, label: 'Jobs', href: '/dashboard/seeker/jobs' },
+        { icon: Person, label: 'Saved Jobs', href: '/dashboard/seeker/saved' },
+        { icon: Bell, label: 'Applications', href: '/dashboard/seeker/applications' },
+        { icon: Bars, label: 'Billing', href: '/dashboard/seeker/billing' },
+    ]
+
+    const navLinkMap = {
+        seeker: seekerNavLinks,
+        recruiter: recruiterNavLinks
+    }
+    const navItems = navLinkMap[user?.role || 'seeker']
 
     const navContent = <nav className="flex flex-col gap-1">
         {navItems.map((item) => (

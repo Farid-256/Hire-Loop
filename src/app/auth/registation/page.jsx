@@ -13,11 +13,15 @@ const Registation = () => {
     const redirectTo = searchParams.get('redirect') || '/'
 
     const onSubmit = async (data) => {
+
+        const plan = data.role === 'seeker' ? 'seeker_free' : 'recruiter_free'
+
         const { error } = await authClient.signUp.email({
             name: data.name,
             email: data.email,
-            role: data.role,
             password: data.password,
+            role: data.role,
+            plan: plan,
         });
 
         if (error) {
@@ -26,7 +30,7 @@ const Registation = () => {
             toast.success("Account created!");
             router.push(redirectTo);
         }
-    };
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 my-5">
@@ -49,7 +53,7 @@ const Registation = () => {
                         {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
                     </div>
 
-                   
+
 
                     {/* Email */}
                     <div>
@@ -114,4 +118,4 @@ const Registation = () => {
     );
 };
 
-export default Registation;
+export default Registation

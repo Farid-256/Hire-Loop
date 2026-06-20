@@ -13,16 +13,35 @@ const Navbar = () => {
     const { data: sesson, isPending } = useSession()
     const user = sesson?.user
 
-
     const handleLogout = async () => {
         await signOut()
         router.push('/auth/login')
     }
 
-    if(isPending){
-        <h2 className="text-5xl text-blue-800 font-black text-center">Loading...</h2>
+    // ✅ Function এর উপরে রাখুন, JSX এর ভেতরে না
+    const dashBoardLinks = {
+        seeker: '/dashBoard/seeker',
+        recruiter: '/dashBoard/recruiter'
     }
 
+    // ✅ navLinks array বানান
+    const navLinks = [
+        { label: 'Browse Jobs', href: '/jobs' },
+        { label: 'Company', href: '/companies' },
+        { label: 'Pricing', href: '/plans' },
+    ]
+
+    // ✅ user থাকলে Dashboard link যোগ করুন
+    if (user?.email) {
+        navLinks.push({
+            label: 'DashBoard',
+            href: dashBoardLinks[user?.role || 'seeker']
+        })
+    }
+
+    if (isPending) {
+        return <h2 className="text-5xl text-blue-800 font-black text-center">Loading...</h2>
+    }
 
     return (
         <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -33,37 +52,38 @@ const Navbar = () => {
                     <h3><Link href='/' className="text-2xl font-bold text-amber-500">Hire-Loop</Link></h3>
                 </div>
 
-                {/* Desktop Menu */}
+                {/* Desktop Menu — navLinks থেকে map করুন */}
                 <div className="hidden md:flex items-center gap-10 text-gray-700 font-medium">
-                    <Link href="/jobs" className="hover:text-amber-500 transition">Browse Jobs</Link>
-                    <Link href="/companies" className="hover:text-amber-500 transition">Company</Link>
-                    <Link href="/plans" className="hover:text-amber-500 transition">Pricing</Link>
+                    {navLinks.map(link => (
+                        <Link key={link.href} href={link.href} className="hover:text-amber-500 transition">
+                            {link.label}
+                        </Link>
+                    ))}
                 </div>
 
                 {/* Desktop Buttons */}
                 <div className="hidden md:flex items-center gap-3">
-
-                    {
-                        user ? <> <h3 className="text-xl font-bold text-blue-600">{user.name}</h3> <button onClick={handleLogout} className="px-5 py-2 bg-blue-600 rounded-sm cursor-pointer ">Logout</button> </> : <> <Link
-                            href="/auth/login"
-                            className="px-6 py-2.5 border border-gray-300 rounded-xl bg-blue-600 transition"
-                        >
-                            Login
-                        </Link>
-                            <Link
-                                href="/auth/registation"
-                                className="px-6 py-2.5 bg-blue-600 text-white rounded-xl transition"
-                            >
+                    {user ? (
+                        <>
+                            <h3 className="text-xl font-bold text-blue-600">{user.name}</h3>
+                            <button onClick={handleLogout} className="px-5 py-2 bg-blue-600 text-white rounded-sm cursor-pointer">
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/auth/login" className="px-6 py-2.5 border border-gray-300 rounded-xl bg-blue-600 text-white transition">
+                                Login
+                            </Link>
+                            <Link href="/auth/registation" className="px-6 py-2.5 bg-blue-600 text-white rounded-xl transition">
                                 Get Started
-                            </Link></>
-                    }
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Hamburger Button */}
-                <button
-                    className="md:hidden text-3xl text-gray-700"
-                    onClick={() => setIsOpen(!isOpen)}
-                >
+                <button className="md:hidden text-3xl text-gray-700" onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <RxCross2 /> : <IoReorderThreeOutline />}
                 </button>
             </div>
@@ -72,32 +92,32 @@ const Navbar = () => {
             {isOpen && (
                 <div className="md:hidden bg-white border-t shadow-lg">
                     <div className="flex flex-col px-6 py-6 space-y-5 text-gray-700 font-medium">
-                        <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-amber-500">Browse Jobs</Link>
-                        <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-amber-500">Company</Link>
-                        <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-amber-500">Pricing</Link>
+                        {navLinks.map(link => (
+                            <Link key={link.href} href={link.href} onClick={() => setIsOpen(false)} className="hover:text-amber-500">
+                                {link.label}
+                            </Link>
+                        ))}
 
                         <div className="pt-4 flex flex-col gap-3">
-
-                            {
-                                user ? <> <h3 className="text-xl font-bold text-blue-600">{user.name}</h3> <button onClick={handleLogout} className="px-5 py-2 text-white bg-blue-600 rounded-sm cursor-pointer ">Logout</button> </> : <>
-                                    <Link
-                                        href="/auth/login"
-                                        onClick={() => setIsOpen(false)}
-                                        className="text-center text-white py-3 border border-gray-300 bg-blue-600 
-                                rounded-xl"
-                                    >
+                            {user ? (
+                                <>
+                                    <h3 className="text-xl font-bold text-blue-600">{user.name}</h3>
+                                    <button onClick={handleLogout} className="px-5 py-2 text-white bg-blue-600 rounded-sm cursor-pointer">
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link href="/auth/login" onClick={() => setIsOpen(false)}
+                                        className="text-center text-white py-3 border border-gray-300 bg-blue-600 rounded-xl">
                                         Login
                                     </Link>
-                                    <Link
-                                        href="/auth/registation"
-                                        onClick={() => setIsOpen(false)}
-                                        className="text-center py-3 bg-blue-600 text-white rounded-xl"
-                                    >
+                                    <Link href="/auth/registation" onClick={() => setIsOpen(false)}
+                                        className="text-center py-3 bg-blue-600 text-white rounded-xl">
                                         Get Started
                                     </Link>
                                 </>
-                            }
-
+                            )}
                         </div>
                     </div>
                 </div>

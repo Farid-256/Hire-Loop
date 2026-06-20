@@ -3,12 +3,13 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { stripe } from '@/lib/stripe';
 import { getUserSesson } from '@/lib/core/sesson';
+import { creatSubscribtion } from '@/lib/actions/subscriptions';
 
 
 const SuccessPage = async ({ searchParams }) => {
     const { session_id } = await searchParams;
 
-  
+
     if (!session_id) {
         redirect('/plans');
     }
@@ -33,7 +34,7 @@ const SuccessPage = async ({ searchParams }) => {
                     <h2 className="text-2xl font-bold text-red-700 mb-2">Something went wrong</h2>
                     <p className="text-red-600">Could not verify your payment. Please contact support.</p>
                     <Link href="/plans" className="inline-block mt-4 text-blue-600 hover:underline">
-                        ← Back to Plans
+                        Back to Plans
                     </Link>
                 </div>
             </div>
@@ -45,26 +46,50 @@ const SuccessPage = async ({ searchParams }) => {
     const amount = session.amount_total ? (session.amount_total / 100).toFixed(2) : null;
     const currency = session.currency?.toUpperCase() || 'USD';
 
+    const planId = session.metadata?.planId;
+    const userId = session.metadata?.userId;
+
+    const subInfo = {
+        userId,
+        planId,
+        sessionId: session.id,
+        email: session.customer?.email || user.email,
+        amount,
+        currency,
+        status: 'active',
+    }
+
+    const result = await creatSubscribtion(subInfo)
+    console.log(result)
     return (
+
         <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
             <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl border border-green-100 p-8 text-center">
-   
+
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
 
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Payment Successful! 🎉</h1>
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Payment Successful! </h1>
                 <p className="text-gray-600 mb-6">
                     Your <span className="font-semibold text-blue-600">{planName}</span> subscription is now active.
                 </p>
 
-    
+
                 <div className="bg-gray-50 rounded-xl p-4 mb-6 text-left text-sm">
                     <div className="grid grid-cols-2 gap-2">
                         <span className="text-gray-500">Plan</span>
                         <span className="font-medium text-gray-800 text-right">{planName}</span>
+                        <div>
+                            {/* এগুলো যোগ করুন */}
+                            <span className="text-gray-500">Plan ID</span>
+                            <span className="font-medium text-gray-800 text-right">{planId}</span>
+
+                            <span className="text-gray-500">Email</span>
+                            <span className="font-medium text-gray-800 text-right">{user.email}</span>
+                        </div>
 
                         {amount && (
                             <>
@@ -88,9 +113,9 @@ const SuccessPage = async ({ searchParams }) => {
                     </div>
                 </div>
 
-   
+
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                   
+
                     <Link href="/jobs" className="bg-gray-200 hover:bg-gray-300
                     text-gray-800 font-semibold py-2.5 px-6 rounded-lg transition">
                         Browse Jobs
@@ -101,6 +126,8 @@ const SuccessPage = async ({ searchParams }) => {
                     If you have any questions, please contact our support team.
                 </p>
             </div>
+
+
         </div>
     );
 };
