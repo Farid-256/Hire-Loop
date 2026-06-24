@@ -13,25 +13,45 @@ const PostJobForm = ({ company }) => {
         setLoading(true);
         const formData = new FormData(e.currentTarget);
         const jobData = Object.fromEntries(formData.entries());
-        console.log(company)
 
         jobData.status = 'active'
         jobData.companyId = company._id
         jobData.companyName = company.companyName
-
-
-        setTimeout(() => {
-            setLoading(false);
-            e.target.reset();
-        }, 1000);
 
         const res = await creatJobs(jobData)
         if (res.insertedId) {
             toast.success('Job posted successfully!!')
             redirect('/dashBoard/recruiter')
         }
+
+        setLoading(false);
+        e.target.reset();
     };
 
+    // ✅ Company না থাকলে
+    if (!company) {
+        return (
+            <div className="max-w-2xl mx-auto py-20 px-6 text-center">
+                <h3 className="text-2xl font-bold text-white mb-3">No Company Found</h3>
+                <p className="text-gray-400">Please create a company profile first to post jobs.</p>
+            </div>
+        );
+    }
+
+    // ✅ Company approved না হলে
+    if (company.status !== 'approved') {
+        return (
+            <div className="max-w-2xl mx-auto py-20 px-6 text-center">
+                <div className="bg-yellow-100 text-yellow-700 p-6 rounded-2xl">
+                    <h3 className="text-xl font-bold mb-2">⏳ Please wait to get approval</h3>
+                    <p>Your company status is currently: <strong>{company.status}</strong></p>
+                    <p className="mt-2 text-sm">You can post jobs once your company profile is approved by the admin.</p>
+                </div>
+            </div>
+        );
+    }
+
+    // ✅ Approved হলে Job Post Form দেখাবে
     return (
         <div className="max-w-4xl mx-auto py-10 px-6">
             <h2 className="text-3xl font-bold text-white mb-2">Post a New Job</h2>
@@ -135,7 +155,7 @@ const PostJobForm = ({ company }) => {
 
             </form>
         </div>
-    );
-};
+    )
+}
 
 export default PostJobForm

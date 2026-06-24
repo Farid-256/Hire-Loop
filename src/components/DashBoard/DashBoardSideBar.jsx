@@ -18,13 +18,22 @@ export async function DashBoardSideBar() {
         { icon: House, label: 'Dashboard', href: '/dashboard/seeker' },
         { icon: Magnifier, label: 'Jobs', href: '/dashboard/seeker/jobs' },
         { icon: Person, label: 'Saved Jobs', href: '/dashboard/seeker/saved' },
-        { icon: Bell, label: 'Applications', href: '/dashboard/seeker/applications' },
+        { icon: Bell, label: 'Applications', href: '/dashBoard/seeker/applications' },
         { icon: Bars, label: 'Billing', href: '/dashboard/seeker/billing' },
     ]
+    const adminNavLinks = [
+        { icon: House, label: 'Dashboard', href: '/dashBoard/admin' },
+        { icon: Person, label: 'Users', href: '/admin/users' },
+        { icon: Magnifier, label: 'Companies', href: '/dashBoard/admin/companies' },
+        { icon: Bell, label: 'Jobs', href: '/admin/jobs' },
+        { icon: Bars, label: 'Payment', href: '/admin/payment' },
+    ];
 
     const navLinkMap = {
         seeker: seekerNavLinks,
-        recruiter: recruiterNavLinks
+        recruiter: recruiterNavLinks,
+        admin: adminNavLinks
+        
     }
     const navItems = navLinkMap[user?.role || 'seeker']
 

@@ -18,10 +18,10 @@ const Navbar = () => {
         router.push('/auth/login')
     }
 
-    // ✅ Function এর উপরে রাখুন, JSX এর ভেতরে না
     const dashBoardLinks = {
         seeker: '/dashBoard/seeker',
-        recruiter: '/dashBoard/recruiter'
+        recruiter: '/dashBoard/recruiter',
+        admin: '/dashBoard/admin'
     }
 
     // ✅ navLinks array বানান

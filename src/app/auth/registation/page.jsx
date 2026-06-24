@@ -91,7 +91,6 @@ const Registation = () => {
                             <option value="">Select Role</option>
                             <option value="seeker">Seeker</option>
                             <option value="recruiter">Recruiter</option>
-                            <option value="admin">Admin</option>
                         </select>
                         {errors.role && <p className="text-red-400 text-xs mt-1">{errors.role.message}</p>}
                     </div>
